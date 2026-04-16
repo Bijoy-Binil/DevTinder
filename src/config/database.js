@@ -1,0 +1,1 @@
+const DB_URL="DB_URL=mongodb+srv://bijoy_db:Bijoy@mongodb@cluster0.l6kl9ia.mongodb.net/"
