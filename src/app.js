@@ -7,9 +7,11 @@ const User = require("./models/user");
 const AdminAuth = require("./middlewares/AdminAuth");
 const migrate = require("./scripts/migrate");
 const validateEmail = require("./utils/validators");
-
+const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
+const UserAuth = require('../src/middlewares/UserAuth')
 app.use(express.json());
-// app.use('/admin', AdminAuth)
+app.use(cookieParser()); 
 
 // app.get('/admin/login', (req, res) => {
 //     res.send("Login Route");
@@ -35,12 +37,18 @@ app.post("/user/signup", async (req, res) => {
     res.send("Error :" + error);
   }
 });
+
 app.post("/user/login", async (req, res) => {
   const {emailId,password} = req.body;
   try {
     const user =await User.findOne({emailId})
 
    const isUser=await bcrypt.compare(password,user.password)
+   if(user){
+    const token = jwt.sign({userId:user._id},"DevTinder@12")
+    res.cookie("token",token)
+    console.log("Token==>",token)
+   }
   if(isUser){
     res.send("User LoggedIn successfully");
   }else{
@@ -64,6 +72,20 @@ app.patch("/user/update", async (req, res) => {
     res.send("Error Updating user");
   }
 });
+
+
+
+app.get('/connect',UserAuth,async(req,res)=>{
+ const userId=req.user.userId
+ console.log("userId==>",userId)
+ const userData=await User.findById(userId)
+ console.log("userData==>",userData)
+res.send("Connected")
+})
+
+
+
+
 
 const startServer = async () => {
   try {
