@@ -6,7 +6,7 @@ POST- /logout
 ## profile
 GET - /profile
 PATCH - /profile/edit
-POST - /profile/reset-password
+PATCH - /profile/reset-password
 
 ## ConnectionRequest
 -POST /request/send/interested/:userId

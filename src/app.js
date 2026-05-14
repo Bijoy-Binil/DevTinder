@@ -6,7 +6,7 @@ const app = express();
 const User = require("./models/user");
 const AdminAuth = require("./middlewares/AdminAuth");
 const migrate = require("./scripts/migrate");
-const validateEmail = require("./utils/validators");
+
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const UserAuth = require('../src/middlewares/UserAuth');
@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 app.use("/user", authRouter);
 app.use("/user", requestRouter);
-app.use("/",profileRouter);
+app.use("/profile",profileRouter);
 
 const startServer = async () => {
   try {

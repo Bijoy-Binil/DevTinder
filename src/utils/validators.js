@@ -9,4 +9,22 @@ const EmailValidator=(req)=>{
     }
 
 }
-module.exports=EmailValidator
+const validateEditProfileData=(req)=>{
+    const allowedEditFields=["firstName","lastName","age"]
+
+  const isEditAllowed=Object.keys(req.body).every((field)=>{
+        if(!allowedEditFields.includes(field)){
+            throw new Error("Invalid Edit Field")
+        }        return true;
+    })
+    return isEditAllowed;
+}
+    const passwordValidator=(req)=>{
+        const {password}=req.body;
+        if(!validator.isLength(password, { min: 6, max: 100 })){
+            throw new Error("Password must be between 6 and 100 characters long");
+        }
+        return true;
+    }
+
+module.exports={EmailValidator,validateEditProfileData,passwordValidator}

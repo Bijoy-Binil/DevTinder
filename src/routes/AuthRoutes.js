@@ -1,6 +1,6 @@
 const express=require('express')
 const User = require("../models/user");
-const validateEmail = require("../utils/validators");
+const {EmailValidator} = require("../utils/validators");
 const jwt = require('jsonwebtoken')
 const bcrypt=require('bcrypt')
 
@@ -10,7 +10,7 @@ const authRouter=express.Router()
  authRouter.post("/signup", async (req, res) => {
    try {
      const { firstName, lastName, emailId, password, age } = req.body;
-     validateEmail(req);
+     EmailValidator(req);
      const userPassword = await bcrypt.hash(password, 10);
      const userData = {
        firstName,
@@ -57,19 +57,6 @@ const authRouter=express.Router()
  });
 
 
- authRouter.patch("/update", async (req, res) => {
-   const userId = req.body._id;
-   const data = req.body;
-   console.log("data==>", data);
-   console.log("userId==>", userId);
-   try {
-     const allUsers = await User.findOneAndUpdate({ _id: userId }, req.body);
-     res.send(allUsers);
-     res.send("User Updated successfully");
-   } catch (error) {
-     res.send("Error Updating user");
-   }
- });
- 
+
 
 module.exports= authRouter
