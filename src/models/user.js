@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
 
     },
     emailId: {
-        type: String,
+        type: String,   
         required: true,
         unique: false,
     },
@@ -18,9 +18,30 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    gender: {
+        type: String,
+        enum: ['male', 'female', 'other'],
+        message: `{VALUE} is not a valid gender`
+    },
+    photo_url: {
+        type: String,
+        default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+        validate: {
+            validator: function(v) {
+                return validator.isURL(v);
+            },
+            message: `{VALUE} is not a valid URL`
+        }
+    },
     age: {
         type: Number,
-    }
+        min: 0,
+        max: 120
+    },
+    about: {
+        type: String,
+        maxlength: 500
+    },
 })
 
 

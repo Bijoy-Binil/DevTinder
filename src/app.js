@@ -13,6 +13,7 @@ const UserAuth = require('../src/middlewares/UserAuth');
 const authRouter = require("./routes/AuthRoutes");
 const requestRouter = require("./routes/RequestRoutes");
 const profileRouter = require("./routes/ProfileRoutes");
+const userRouter = require("./routes/User");
 app.use(express.json());
 app.use(cookieParser()); 
 
@@ -20,8 +21,9 @@ app.use(cookieParser());
 //     res.send("Login Route");
 // });
 
-app.use("/user", authRouter);
-app.use("/user", requestRouter);
+app.use("/", authRouter);
+app.use("/user", userRouter);
+app.use("/request", requestRouter);
 app.use("/profile",profileRouter);
 
 const startServer = async () => {

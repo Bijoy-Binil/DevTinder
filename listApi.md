@@ -1,22 +1,20 @@
 ## Auth
-POST- /signup
-POST- /login
-POST- /logout
+[x]POST- /signup
+[x]POST- /login
+[x]POST- /logout
 
 ## profile
-GET - /profile
-PATCH - /profile/edit
-PATCH - /profile/reset-password
+[x]GET   - /profile
+[x]PATCH - /profile/edit
+[x]PATCH - /profile/reset-password
 
 ## ConnectionRequest
--POST /request/send/interested/:userId
--POST /request/send/ignored/:userId
--POST /request/review/accepted/:requestId
--POST /request/send/rejected/:requestId
+[x]-POST /request/send/:status/:userId
+[x]-POST /request/review/:status/:requestId
 
 ## User
-GET - /user/SendconnectionRequest
-GET - /user/requests
-GET - /user/feed
+[x]GET - /user/requests
+[x]GET - /user/connections
+   GET - /user/feed
 
 Status: Ignored, Interested, Accepted, Rejected
