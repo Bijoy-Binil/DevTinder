@@ -37,14 +37,13 @@ const authRouter=express.Router()
     if(user){
      const token = jwt.sign({userId:user._id},"DevTinder@12")
      res.cookie("token",token)
-     console.log("Token==>",token)
     }
    if(isUser){
-     res.send("User LoggedIn successfully");
+     res.send(user);
    }else{
      throw new Error("Invalid Credential given!!")
    }
-     res.send("User LoggedIn successfully");
+   
    } catch (error) {
      res.status(400).send("Error: "+error);
    }

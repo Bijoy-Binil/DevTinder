@@ -1,6 +1,68 @@
+import { useForm } from "react-hook-form";
+import { loginSchema } from "./zod/loginZod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useLoginMutation } from "../Auth/services/Auth";
+import { useEffect } from "react";
 const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(loginSchema) });
+
+  const [login, { isLoading }] = useLoginMutation();
+  const handleLogin = async (data) => {
+    try {
+      const datas = { emailId: data.email, password: data.password };
+     const user = await login(datas);
+     console.log("user==>",user)
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
+    }
+  };
+  // useEffect(() => {
+  // console.log("useLoginMutation==>",useLoginMutation)
+  // console.log("isLoading==>",isLoading)
+  // }, [])
+
   return (
-    <div>Login</div>
-  )
-}
-export default Login
+    <div className="flex justify-center my-10">
+      <form
+        onSubmit={handleSubmit(handleLogin)}
+        className="fieldset bg-base-300 border-base-300 rounded-box w-xs border p-4"
+      >
+        <legend className="fieldset-legend text-center">Login</legend>
+
+        <label className="label">Email</label>
+        <input
+          type="email"
+          className="input"
+          placeholder="Email"
+          {...register("email")}
+        />
+
+        {errors.email && (
+          <p className="text-red-500 text-sm">{errors.email.message}</p>
+        )}
+
+        <label className="label">Password</label>
+        <input
+          type="password"
+          className="input"
+          placeholder="Password"
+          {...register("password")}
+        />
+
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password.message}</p>
+        )}
+
+        <button type="submit" className="btn btn-neutral mt-4">
+          Login
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default Login;
