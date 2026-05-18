@@ -3,23 +3,34 @@ import { loginSchema } from "./zod/loginZod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoginMutation } from "../Auth/services/Auth";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
+
 const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(loginSchema) });
-
+  const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
+  const navigate= useNavigate();
+
   const handleLogin = async (data) => {
     try {
       const datas = { emailId: data.email, password: data.password };
-     const user = await login(datas);
-     console.log("user==>",user)
+      const user = await login(datas);
+      dispatch(addUser(user.data));
+      navigate('/feed')
+      console.log("user==>", user.data);
     } catch (error) {
       console.error(`Error: ${error.message}`);
     }
   };
+
+
+
   // useEffect(() => {
   // console.log("useLoginMutation==>",useLoginMutation)
   // console.log("isLoading==>",isLoading)
