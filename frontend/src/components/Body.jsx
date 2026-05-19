@@ -1,14 +1,40 @@
-import { Outlet } from "react-router-dom"
-import Navbar from "./Navbar"
-import Footer from "./Footer"
+import { Outlet, useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import { useGetProfileQuery } from "./profileApi";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Body = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const userData = useSelector((store) => store.user);
+  const {
+    data: profile,
+    isLoading,
+    error,
+  } = useGetProfileQuery(undefined, {
+    skip: !!userData,
+  });
+
+  useEffect(() => {
+    if (profile) {
+      dispatch(addUser(profile));
+    
+    }
+    // console.log("error==>",error?.data)
+    if (error) {
+      navigate("/login");
+    }
+  }, [profile, error, dispatch, navigate]);
   return (
     <div>
-         <Navbar/>
-         <Outlet/>
-         <Footer/>
+      <Navbar />
+      <Outlet />
+      <Footer />
     </div>
-  )
-}
-export default Body
+  );
+};
+export default Body;

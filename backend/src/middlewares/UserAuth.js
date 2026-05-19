@@ -3,12 +3,13 @@ const jwt = require("jsonwebtoken");
 const UserAuth = (req, res, next) => {
   const {token} = req.cookies;
   if (!token) {
-    throw new Error("Token is not valid!!");
+    return res.status(401).send("Please Login")
+    
   }
   try {
-    const decodeToken = jwt.verify(token, "DevTinder@12");
-    console.log("decodeToken=>", decodeToken);
-    req.user=decodeToken
+    const user = jwt.verify(token, "DevTinder@12");
+    console.log("user=>", user);
+    req.user=user
     next();
   } catch (error) {
     console.log(error);

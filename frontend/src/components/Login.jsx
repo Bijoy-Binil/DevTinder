@@ -22,8 +22,7 @@ const Login = () => {
       const datas = { emailId: data.email, password: data.password };
       const user = await login(datas);
       dispatch(addUser(user.data));
-      navigate('/feed')
-      console.log("user==>", user.data);
+        navigate("/feed");
     } catch (error) {
       console.error(`Error: ${error.message}`);
     }
