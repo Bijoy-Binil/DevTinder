@@ -3,6 +3,7 @@ import Body from "./components/Body"
 import Login from "./components/Login"
 import Profile from "./components/Profile"
 import Feed from "./components/Feed"
+import { ToastContainer, toast } from 'react-toastify';
 const App = () => {
   return (
     <div >
@@ -17,7 +18,18 @@ const App = () => {
      
       </Routes>
       </BrowserRouter>
-     
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss={true}
+        draggable={true}
+        pauseOnHover={true}
+        theme="colored" // Options: "light", "dark", "colored"
+      />
     </div>
   )
 }

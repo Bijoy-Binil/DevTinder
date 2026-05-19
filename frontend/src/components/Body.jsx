@@ -17,6 +17,7 @@ const Body = () => {
     error,
   } = useGetProfileQuery(undefined, {
     skip: !!userData,
+     refetchOnMountOrArgChange: true,
   });
 
   useEffect(() => {
