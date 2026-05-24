@@ -22,7 +22,7 @@ userRouter.get("/requests/received", userAuth, async (req, res) => {
   }
 });
 
-const USER_SAFE_DATA = "firstName lastName age photo_url gender";
+const USER_SAFE_DATA = "firstName lastName age photo_url gender skills about";
 userRouter.get("/connections", userAuth, async (req, res) => {
   try {
     const loggedUserIn = req.user;
@@ -79,7 +79,7 @@ userRouter.get("/feed", userAuth, async (req, res) => {
         { _id: { $ne: loggedInUser.userId } },
       ],
     }).select(USER_SAFE_DATA).skip(skip).limit(limit);
-
+console.log("users==>",users)
     res.status(200).json(users);
   } catch (error) {
     res.status(400).json({

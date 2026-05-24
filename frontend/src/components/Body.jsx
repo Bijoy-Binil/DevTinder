@@ -5,7 +5,7 @@ import { useGetProfileQuery } from "./profileApi";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
-
+import { toast } from "react-toastify";
 const Body = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,8 +25,9 @@ const Body = () => {
       dispatch(addUser(profile));
     
     }
-    // console.log("error==>",error?.data)
+   
     if (error) {
+      toast.error(error)
       navigate("/login");
     }
   }, [profile, error, dispatch, navigate]);

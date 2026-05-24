@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const validator =require('validator')
+const validator = require('validator')
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -7,10 +7,9 @@ const userSchema = new mongoose.Schema({
     },
     lastName: {
         type: String,
-
     },
     emailId: {
-        type: String,   
+        type: String,
         required: true,
         unique: false,
     },
@@ -27,7 +26,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
         validate: {
-            validator: function(v) {
+            validator: function (v) {
                 return validator.isURL(v);
             },
             message: `{VALUE} is not a valid URL`
@@ -42,7 +41,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         maxlength: 500
     },
+    skills: {
+        type: [String],
+        default: [],
+    },
+    isActive: {
+        type: Boolean,
+        default: true,
+    },
 })
-
 
 module.exports = mongoose.model("User", userSchema)

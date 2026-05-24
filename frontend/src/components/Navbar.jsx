@@ -11,7 +11,7 @@ const Navbar = () => {
   const [logout, { error, isLoading, isSuccess }] = useLogoutMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log("isSuccess==>",isSuccess)
+
 
 const handleLogout = async () => {
   try {

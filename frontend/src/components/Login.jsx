@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
 const Login = () => {
   const {
     register,
@@ -14,26 +14,21 @@ const Login = () => {
     formState: { errors },
   } = useForm({ resolver: zodResolver(loginSchema) });
   const dispatch = useDispatch();
-  const [login, { isLoading }] = useLoginMutation();
-  const navigate= useNavigate();
+  const [login, { isLoading, error }] = useLoginMutation();
+  const navigate = useNavigate();
+
+  console.log("error==>", error);
 
   const handleLogin = async (data) => {
     try {
       const datas = { emailId: data.email, password: data.password };
-      const user = await login(datas);
-      dispatch(addUser(user.data));
-        navigate("/feed");
-    } catch (error) {
-      console.error(`Error: ${error.message}`);
+      const user = await login(datas).unwrap();
+      dispatch(addUser(user));
+      navigate("/feed");
+    } catch (err) {
+      toast.error(err?.data?.message || "Login failed");
     }
   };
-
-
-
-  // useEffect(() => {
-  // console.log("useLoginMutation==>",useLoginMutation)
-  // console.log("isLoading==>",isLoading)
-  // }, [])
 
   return (
     <div className="flex justify-center my-10">
@@ -44,12 +39,7 @@ const Login = () => {
         <legend className="fieldset-legend text-center">Login</legend>
 
         <label className="label">Email</label>
-        <input
-          type="email"
-          className="input"
-          placeholder="Email"
-          {...register("email")}
-        />
+        <input className="input" placeholder="Email" {...register("email")} />
 
         {errors.email && (
           <p className="text-red-500 text-sm">{errors.email.message}</p>
