@@ -26,11 +26,24 @@ export const profileApi = createApi({
         url: "/user/connections",
       }),
     }),
+    getRequest: builder.query({
+      query: () => ({
+        url: `/user/requests/received`,
+      }),
+    }),
+    reviewRequest: builder.mutation({
+      query: ({status, requestId}) => ({
+        url: `/request/review/${status}/${requestId}`,
+        method:"POST"
+      }),
+    }),
   }),
 });
 
 export const {
   useGetProfileQuery,
   useGetConnectionsQuery,
+  useGetRequestQuery,
+  useReviewRequestMutation,
   useEditProfileMutation,
 } = profileApi;

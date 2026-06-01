@@ -43,6 +43,9 @@ const Navbar = () => {
         <Link to={"/connections"} className="ml-7">
           Connections
         </Link>
+        <Link to={"/request"} className="ml-7">
+          All Requests
+        </Link>
       </div>
 
       {user && (
