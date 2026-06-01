@@ -78,6 +78,12 @@ requestRouter.post(
         toUserId: loggedInUser.userId,
         status: "interested",
       });
+console.log("requestId==>",requestId)
+console.log("toUserId==>",loggedInUser.userId)
+console.log("connectionRequest==>",connectionRequest)
+      const connectionRequest1 = await ConnectionRequest.findById(requestId);
+
+console.log("connectionRequest1==>",connectionRequest1)
 
       if (!connectionRequest) {
         throw new Error("Connection Request Not Found !!");

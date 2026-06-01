@@ -10,7 +10,8 @@ const EmailValidator=(req)=>{
 
 }
 const validateEditProfileData=(req)=>{
-    const allowedEditFields=["firstName","lastName","age"]
+    const allowedEditFields=["firstName","lastName","age","about","gender","photo_url"]
+const data = req.body
 
   const isEditAllowed=Object.keys(req.body).every((field)=>{
         if(!allowedEditFields.includes(field)){

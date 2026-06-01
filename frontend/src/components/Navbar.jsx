@@ -5,29 +5,30 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { removeUser } from "../utils/userSlice";
 import { profileApi } from "./profileApi";
-
+import { useGetProfileQuery } from "./profileApi";
 const Navbar = () => {
-  const user = useSelector((store) => store.user);
+  // const user = useSelector((store) => store.user);
   const [logout, { error, isLoading, isSuccess }] = useLogoutMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { data: user } = useGetProfileQuery();
+  // console.log("user=>", user);
 
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
 
-const handleLogout = async () => {
-  try {
-    await logout().unwrap();
+      // dispatch(removeUser());
 
-    dispatch(removeUser());
+      dispatch(profileApi.util.resetApiState());
 
-    dispatch(profileApi.util.resetApiState());
+      toast.success("Logged out successfully! 👋");
 
-    toast.success("Logged out successfully! 👋");
-
-    navigate("/login");
-  } catch (err) {
-    toast.error(err.message);
-  }
-};
+      navigate("/login");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
   return (
     <div className="navbar bg-base-300  shadow-sm">
       <div className="flex-1">
@@ -38,6 +39,9 @@ const handleLogout = async () => {
         <Link to={"/profile"}>Profile</Link>
         <Link to={"/feed"} className="ml-7">
           Feed
+        </Link>
+        <Link to={"/connections"} className="ml-7">
+          Connections
         </Link>
       </div>
 

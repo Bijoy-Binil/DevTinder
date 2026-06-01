@@ -8,7 +8,7 @@ const Feed = () => {
   const { data: feed, isLoading, error } = useGetFeedQuery();
   const dispatch = useDispatch();
   const feeds = useSelector((store) => store.feed);
-
+console.log("Storefeeds==>",feeds)
   useEffect(() => {
     if (feed) {
       dispatch(addFeed(feed));

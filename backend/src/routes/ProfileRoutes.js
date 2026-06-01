@@ -1,13 +1,17 @@
 const express = require("express");
 const User = require("../models/user");
 const UserAuth = require("../middlewares/UserAuth");
-const { validateEditProfileData, passwordValidator } = require("../utils/validators");
+const {
+  validateEditProfileData,
+  passwordValidator,
+} = require("../utils/validators");
 const profileRouter = express.Router();
-const bcrypt=require('bcrypt')
+const bcrypt = require("bcrypt");
 
 profileRouter.get("/view", UserAuth, async (req, res) => {
   try {
     const user = req.user;
+    console.log("tokeUser==>",user)
     const userData = await User.findById(req.user.userId);
     res.send(userData);
   } catch (error) {
@@ -26,24 +30,26 @@ profileRouter.patch("/edit", UserAuth, async (req, res) => {
     throw new Error("Unauthorized to edit other user's profile");
   }
   const data = req.body;
-  console.log("data==>", data);
-  console.log("userId==>", userId);
+  // console.log("data==>", data);
+  // console.log("userId==>", userId);
   try {
-    const updatedData = await User.findOneAndUpdate({ _id: userId }, req.body);
-    res.send(updatedData);
-    res.send("User Updated successfully");
+    const updatedData = await User.findOneAndUpdate({ _id: userId }, req.body,{runValidators:true},);
+    res.send({
+      message: "User Updated successfully",
+      data: updatedData,
+    });
   } catch (error) {
     res.send("Error Updating user");
   }
 });
 profileRouter.patch("/reset-password", UserAuth, async (req, res) => {
   const { emailId, password } = req.body;
-  const authUser=req.user.userId
-  console.log("newPassword==>",password)
+  const authUser = req.user.userId;
+  // console.log("newPassword==>", password);
   try {
-    const hashedPassword = await bcrypt.hash(password,10)
-    console.log("hashedPassword==>",hashedPassword)
-    const user = await User.findById( authUser );
+    const hashedPassword = await bcrypt.hash(password, 10);
+    // console.log("hashedPassword==>", hashedPassword);
+    const user = await User.findById(authUser);
     if (!user) {
       throw new Error("User not found");
     }

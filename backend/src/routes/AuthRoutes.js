@@ -24,8 +24,8 @@ authRouter.post("/signup", async (req, res) => {
     };
     const user = new User(userData);
     await user.save();
-console.log("skills =>", skills);
-console.log("type =>", typeof skills);
+// console.log("skills =>", skills);
+// console.log("type =>", typeof skills);
     res.send("User created successfully");
   } catch (error) {
     res.send("Error :" + error);
@@ -34,12 +34,12 @@ console.log("type =>", typeof skills);
 
 authRouter.post("/login", async (req, res) => {
   const { emailId, password } = req.body;
-  console.log("password==>", password);
+  // console.log("password==>", password);
   try {
     const user = await User.findOne({ emailId });
-    console.log("user==>", user);
+    // console.log("user==>", user);
     const isUser = await bcrypt.compare(password, user.password);
-    console.log("isUser==>", isUser);
+    // console.log("isUser==>", isUser);
     if (isUser) {
       const token = jwt.sign({ userId: user._id }, "DevTinder@12");
       res.cookie("token", token);

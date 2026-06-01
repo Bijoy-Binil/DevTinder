@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { profileApi } from "./profileApi";
+
 const Login = () => {
   const {
     register,
@@ -23,7 +25,7 @@ const Login = () => {
     try {
       const datas = { emailId: data.email, password: data.password };
       const user = await login(datas).unwrap();
-      dispatch(addUser(user));
+      dispatch(profileApi.util.invalidateTags(["Profile"]));
       navigate("/feed");
     } catch (err) {
       toast.error(err?.data?.message || "Login failed");
