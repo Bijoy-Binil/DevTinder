@@ -14,7 +14,13 @@ export const userApi = createApi({
     getFeed: builder.query({
       query: () => '/user/feed',
     }),
+    sendRequest: builder.mutation({
+      query: ({ status, userId }) => ({
+        url: `/request/send/${status}/${userId}`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
-export const { useGetFeedQuery } = userApi;
+export const { useGetFeedQuery, useSendRequestMutation } = userApi;

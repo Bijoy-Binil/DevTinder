@@ -5,7 +5,7 @@ import { useLoginMutation } from "../Auth/services/Auth";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { profileApi } from "./profileApi";
 
@@ -62,6 +62,13 @@ const Login = () => {
         <button type="submit" className="btn btn-neutral mt-4">
           Login
         </button>
+
+        <p className="text-center text-sm mt-3">
+          New to DevTinder?{" "}
+          <Link to="/signup" className="link link-primary">
+            Sign up
+          </Link>
+        </p>
       </form>
     </div>
   );

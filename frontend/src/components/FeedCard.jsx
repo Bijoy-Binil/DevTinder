@@ -1,4 +1,4 @@
-const FeedCard = ({ data }) => {
+const FeedCard = ({ data, onSwipe }) => {
   const users = Array.isArray(data) ? data : [data];
 
   return (
@@ -7,7 +7,7 @@ const FeedCard = ({ data }) => {
         if (!user) return null;
 
         return (
-          <div key={idx} className="flex justify-center">
+          <div key={user?._id || idx} className="flex justify-center">
             <div className="relative w-80 h-[550px] rounded-3xl overflow-hidden shadow-2xl bg-base-100">
 
               {/* Profile Image */}
@@ -61,20 +61,30 @@ const FeedCard = ({ data }) => {
                   ))}
                 </div>
 
-                {/* Buttons */}
-                <div className="flex justify-center gap-6 mt-6">
+                {/* Buttons (only shown in the swipeable feed, not the profile preview) */}
+                {onSwipe && (
+                  <div className="flex justify-center gap-6 mt-6">
 
-                  {/* Ignore */}
-                  <button className="w-14 h-14 rounded-full bg-white text-red-500 text-2xl shadow-lg hover:scale-110 transition">
-                    ✕
-                  </button>
+                    {/* Ignore */}
+                    <button
+                      type="button"
+                      onClick={() => onSwipe(user._id, "ignored")}
+                      className="w-14 h-14 rounded-full bg-white text-red-500 text-2xl shadow-lg hover:scale-110 transition"
+                    >
+                      ✕
+                    </button>
 
-                  {/* Interested */}
-                  <button className="w-14 h-14 rounded-full bg-pink-500 text-white text-2xl shadow-lg hover:scale-110 transition">
-                    ❤
-                  </button>
+                    {/* Interested */}
+                    <button
+                      type="button"
+                      onClick={() => onSwipe(user._id, "interested")}
+                      className="w-14 h-14 rounded-full bg-pink-500 text-white text-2xl shadow-lg hover:scale-110 transition"
+                    >
+                      ❤
+                    </button>
 
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

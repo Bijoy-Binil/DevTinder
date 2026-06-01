@@ -1,14 +1,16 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useGetProfileQuery } from "./profileApi";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { toast } from "react-toastify";
+const authRoutes = ["/login", "/signup"];
+
 const Body = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const userData = useSelector((store) => store.user);
   const {
@@ -23,14 +25,14 @@ const Body = () => {
   useEffect(() => {
     if (profile) {
       dispatch(addUser(profile));
-    
     }
-   
-    if (error) {
-      toast.error(error)
+
+    // Don't bounce the user off the auth pages (login/signup) when there is
+    // no session yet — only protected pages should redirect to login.
+    if (error && !authRoutes.includes(location.pathname)) {
       navigate("/login");
     }
-  }, [profile, error, dispatch, navigate]);
+  }, [profile, error, dispatch, navigate, location.pathname]);
   return (
     <div>
       <Navbar />
