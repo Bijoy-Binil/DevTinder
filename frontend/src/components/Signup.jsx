@@ -5,7 +5,7 @@ import { useSignupMutation } from "../Auth/services/Auth";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { profileApi } from "./profileApi";
+import { addUser } from "../utils/userSlice";
 
 const Signup = () => {
   const {
@@ -37,9 +37,10 @@ const Signup = () => {
     };
 
     try {
-      await signup(payload).unwrap();
-      // Cookie is set by the backend — refetch the profile so Body/Navbar update.
-      dispatch(profileApi.util.invalidateTags(["Profile"]));
+      const user = await signup(payload).unwrap();
+      // Backend sets the auth cookie and returns the new user — seed redux so
+      // Navbar/Body update instantly without an extra refetch.
+      dispatch(addUser(user));
       toast.success("Account created! Welcome to DevTinder 🎉");
       navigate("/feed");
     } catch (err) {

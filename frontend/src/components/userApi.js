@@ -19,6 +19,21 @@ export const userApi = createApi({
         url: `/request/send/${status}/${userId}`,
         method: "POST",
       }),
+      // Optimistically drop the swiped user from the cached feed so the card
+      // disappears instantly and never reappears after a remount/refetch.
+      async onQueryStarted({ userId }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          userApi.util.updateQueryData("getFeed", undefined, (draft) => {
+            const index = draft.findIndex((user) => user._id === userId);
+            if (index !== -1) draft.splice(index, 1);
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
     }),
   }),
 });

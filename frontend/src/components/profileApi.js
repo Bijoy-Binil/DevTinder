@@ -7,11 +7,9 @@ export const profileApi = createApi({
     baseUrl: BASE_URL,
     credentials: "include",
   }),
-  tagTypes: ["Profile"],
   endpoints: (builder) => ({
     getProfile: builder.query({
       query: () => "/profile/view",
-      providesTags: ["Profile"],
     }),
     editProfile: builder.mutation({
       query: (data) => ({
@@ -19,7 +17,6 @@ export const profileApi = createApi({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ["Profile"],
     }),
     getConnections: builder.query({
       query: () => ({

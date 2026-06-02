@@ -2,12 +2,10 @@ import { useForm } from "react-hook-form";
 import { loginSchema } from "./zod/loginZod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoginMutation } from "../Auth/services/Auth";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { profileApi } from "./profileApi";
 
 const Login = () => {
   const {
@@ -16,16 +14,15 @@ const Login = () => {
     formState: { errors },
   } = useForm({ resolver: zodResolver(loginSchema) });
   const dispatch = useDispatch();
-  const [login, { isLoading, error }] = useLoginMutation();
+  const [login] = useLoginMutation();
   const navigate = useNavigate();
-
-  console.log("error==>", error);
 
   const handleLogin = async (data) => {
     try {
       const datas = { emailId: data.email, password: data.password };
       const user = await login(datas).unwrap();
-      dispatch(profileApi.util.invalidateTags(["Profile"]));
+      // Seed redux from the response so Navbar/Body update synchronously.
+      dispatch(addUser(user));
       navigate("/feed");
     } catch (err) {
       toast.error(err?.data?.message || "Login failed");

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { EditProfileSchema } from "./zod/EditProfile";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import FeedCard from "./FeedCard";
 import { useEditProfileMutation } from "./profileApi";
@@ -11,15 +11,8 @@ const EditProfile = ({ userData }) => {
   const form = useForm({
     resolver: zodResolver(EditProfileSchema),
   });
-  const [editProfile, { isLoading, isSuccess, error }] =
-    useEditProfileMutation();
-  const {
-    register,
-    handleSubmit,
-    reset,
-    watch,
-    formState: { errors },
-  } = form;
+  const [editProfile] = useEditProfileMutation();
+  const { register, handleSubmit, reset, watch } = form;
   useEffect(() => {
     if (userData) {
       reset({
@@ -39,17 +32,18 @@ const handleEditProfile = async (data) => {
 
     const updatedUser = await editProfile(data).unwrap();
 
-    dispatch(addUser(updatedUser));
+    // Only trust a real user object so a malformed response can't corrupt state.
+    if (updatedUser && updatedUser._id) {
+      dispatch(addUser(updatedUser));
+    }
 
     toast.success("Successfully Edited!!");
 
   } catch (err) {
-console.error(err.message)
-    toast.error("Failed to update profile");
-
+    // Surface the real backend validation message instead of a generic string.
+    toast.error(err?.data?.message || "Failed to update profile");
   }
 };
-  const { firstName, lastName, age, gender, about, photo_url } = userData || {};
   const watchedValues = watch();
   return (
     <>
@@ -86,11 +80,12 @@ console.error(err.message)
           />
 
           <label className="label">Gender</label>
-          <input
-            className="input"
-            {...register("gender")}
-            placeholder="Gender"
-          />
+          <select className="select" {...register("gender")}>
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
 
           <label className="label">Photo Url</label>
           <input

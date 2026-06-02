@@ -28,11 +28,11 @@ const Body = () => {
     }
 
     // Don't bounce the user off the auth pages (login/signup) when there is
-    // no session yet — only protected pages should redirect to login.
-    if (error && !authRoutes.includes(location.pathname)) {
+    // no session yet — only redirect on a settled error on protected pages.
+    if (!isLoading && error && !authRoutes.includes(location.pathname)) {
       navigate("/login");
     }
-  }, [profile, error, dispatch, navigate, location.pathname]);
+  }, [profile, isLoading, error, dispatch, navigate, location.pathname]);
   return (
     <div>
       <Navbar />

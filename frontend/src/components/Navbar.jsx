@@ -1,32 +1,33 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../Auth/services/Auth";
-import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { removeUser } from "../utils/userSlice";
+import { removeFeed } from "../utils/feedSlice";
 import { profileApi } from "./profileApi";
-import { useGetProfileQuery } from "./profileApi";
+import { userApi } from "./userApi";
 const Navbar = () => {
-  // const user = useSelector((store) => store.user);
-  const [logout, { error, isLoading, isSuccess }] = useLogoutMutation();
+  const user = useSelector((store) => store.user);
+  const [logout] = useLogoutMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { data: user } = useGetProfileQuery();
-  // console.log("user=>", user);
 
   const handleLogout = async () => {
     try {
       await logout().unwrap();
 
-      // dispatch(removeUser());
-
+      // Tear down every cached/slice copy of the session so nothing renders
+      // stale and no manual refresh is needed.
+      dispatch(removeUser());
+      dispatch(removeFeed());
       dispatch(profileApi.util.resetApiState());
+      dispatch(userApi.util.resetApiState());
 
       toast.success("Logged out successfully! 👋");
 
       navigate("/login");
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err?.data?.message || err?.error || "Logout failed");
     }
   };
   return (

@@ -61,7 +61,9 @@ authRouter.post("/login", async (req, res) => {
     }
 
     if (isUser) {
-      res.send(user);
+      const safeUser = user.toObject();
+      delete safeUser.password;
+      res.send(safeUser);
     } else {
       throw new Error("Invalid Username or Password");
     }
@@ -74,7 +76,7 @@ authRouter.post("/login", async (req, res) => {
 
 authRouter.post("/logout", async (req, res) => {
   res.cookie("token", null, { expires: new Date(0) });
-  res.send("Logout Successfully");
+  res.json({ message: "Logout Successfully" });
 });
 
 module.exports = authRouter;
