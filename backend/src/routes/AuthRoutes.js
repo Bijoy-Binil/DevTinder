@@ -49,24 +49,25 @@ authRouter.post("/signup", async (req, res) => {
 
 authRouter.post("/login", async (req, res) => {
   const { emailId, password } = req.body;
-  // console.log("password==>", password);
   try {
     const user = await User.findOne({ emailId });
-    // console.log("user==>", user);
-    const isUser = await bcrypt.compare(password, user.password);
-    // console.log("isUser==>", isUser);
-    if (isUser) {
-      const token = jwt.sign({ userId: user._id }, "DevTinder@12");
-      res.cookie("token", token);
-    }
-
-    if (isUser) {
-      const safeUser = user.toObject();
-      delete safeUser.password;
-      res.send(safeUser);
-    } else {
+    // No account for this email — guard before touching user.password so we
+    // return a clean 400 instead of crashing on null.
+    if (!user) {
       throw new Error("Invalid Username or Password");
     }
+
+    const isUser = await bcrypt.compare(password, user.password);
+    if (!isUser) {
+      throw new Error("Invalid Username or Password");
+    }
+
+    const token = jwt.sign({ userId: user._id }, "DevTinder@12");
+    res.cookie("token", token);
+
+    const safeUser = user.toObject();
+    delete safeUser.password;
+    res.send(safeUser);
   } catch (error) {
     res.status(400).json({
       message: error.message,
