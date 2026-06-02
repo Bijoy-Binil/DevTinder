@@ -19,8 +19,10 @@ const userRouter = require("./routes/User");
 app.use(express.json());
 app.use(cookieParser());
 
+// In production the frontend is served same-origin via nginx (/api -> backend),
+// so CORS is not exercised. CORS_ORIGIN lets cross-origin dev/staging still work.
 const corsOptions = {
-  origin: 'http://localhost:5173', 
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   credentials: true
 };
 app.use(cors(corsOptions));
@@ -33,19 +35,31 @@ app.use("/user", userRouter);
 app.use("/request", requestRouter);
 app.use("/profile", profileRouter);
 
+const PORT = process.env.PORT || 7777;
+
 const startServer = async () => {
-  try {
-    await connectDB();
-    console.log("Database connection established");
-
-    await migrate();
-
-    app.listen(7777, () => {
-      console.log("🚀 Server running on port 7777");
-    });
-  } catch (error) {
-    console.error("Startup error:", error);
+  if (!process.env.DB_URL) {
+    // Most common deploy mistake: .env is gitignored, so the server has no DB_URL.
+    console.error(
+      "⚠️  DB_URL is not set. Create backend/.env on the server before starting."
+    );
   }
+
+  // connectDB logs its own success/failure and does NOT throw.
+  await connectDB();
+
+  // Migration must never prevent the server from listening — otherwise a DB
+  // hiccup turns every request into an nginx 502 with no useful error.
+  try {
+    await migrate();
+  } catch (error) {
+    console.error("Migration skipped due to error:", error.message);
+  }
+
+  // Always listen so requests get real responses (200/401/500) instead of 502.
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
 };
 
 startServer();
