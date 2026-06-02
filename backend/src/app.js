@@ -57,7 +57,7 @@ const startServer = async () => {
   }
 
   // Always listen so requests get real responses (200/401/500) instead of 502.
- app.listen(PORT, "0.0.0.0", () => {
+  app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
   });
 };
