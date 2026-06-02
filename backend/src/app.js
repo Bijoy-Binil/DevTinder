@@ -1,4 +1,5 @@
 // import express from 'express' - verified nodemon fix
+require("dotenv").config();
 const express = require("express");
 const bcrypt = require("bcrypt");
 const connectDB = require("./config/database");
